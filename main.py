@@ -1,8 +1,11 @@
+import asyncio
 import math
 import os
 import random
 import sys
 from array import array
+from io import BytesIO
+from urllib.request import Request, urlopen
 import pygame
 
 W, H = 900, 675
@@ -24,6 +27,10 @@ JUMP_BUFFER = 0.12
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ASSET_DIR = os.path.join(BASE_DIR, "assets")
 HIGHSCORE_FILE = os.path.join(BASE_DIR, "highscore.txt")
+SPRITE_URLS = {
+    "cupcake.png": "https://cdn.phototourl.com/member/2026-09-24-fc1c500d-e327-44f3-82c6-a2add28de56f.webp",
+    "chicken.png": "https://cdn.phototourl.com/member/2026-09-24-ca537e9f-b78b-409f-b6df-7736d5cd8897.webp",
+}
 
 OUTLINE = (40, 36, 30)
 GRASS = (115, 191, 46)
@@ -165,6 +172,31 @@ def make_placeholder_image(name):
 
 
 def load_image(name):
+    url = SPRITE_URLS.get(name)
+    if url:
+        try:
+            request = Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            with urlopen(request, timeout=8) as response:
+                data = response.read()
+            try:
+                image = pygame.image.load(BytesIO(data), "sprite.webp").convert_alpha()
+            except pygame.error:
+                from PIL import Image
+
+                webp = Image.open(BytesIO(data)).convert("RGBA")
+                image = pygame.image.fromstring(webp.tobytes(), webp.size, "RGBA")
+            image = image.convert_alpha()
+            image.lock()
+            for y in range(image.get_height()):
+                for x in range(image.get_width()):
+                    r, g, b, a = image.get_at((x, y))
+                    if r >= 245 and g >= 245 and b >= 245:
+                        image.set_at((x, y), (r, g, b, 0))
+            image.unlock()
+            return image
+        except (ImportError, OSError, pygame.error):
+            pass
+
     path = os.path.join(ASSET_DIR, name)
     if not os.path.exists(path):
         return make_placeholder_image(name)
@@ -441,7 +473,7 @@ class Spikes:
 
 
 class Cupcake:
-    SIZE = 34
+    SIZE = 40
 
     def __init__(self, img, gold_img, platform, offset_x, golden):
         self.platform = platform
@@ -866,7 +898,7 @@ class Game:
         for _ in range(26 if golden else 16):
             self.particles.append(Particle(pos[0], pos[1], random.choice(colors)))
 
-    def run(self):
+    async def run(self):
         while True:
             dt = min(self.clock.tick(FPS) / 1000.0, 1 / 30)
             self.t += dt
@@ -874,6 +906,7 @@ class Game:
             self.update(dt)
             self.draw()
             pygame.display.flip()
+            await asyncio.sleep(0)
 
     def handle_events(self):
         for e in pygame.event.get():
@@ -1224,10 +1257,10 @@ class Game:
         sys.exit()
 
 
-def main():
+async def main():
     game = Game()
-    game.run()
+    await game.run()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
