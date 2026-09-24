@@ -32,4 +32,3 @@ python main.py
 
 Collect the target number of cupcakes shown for each course, then reach the end before the timer reaches zero.
 
-ceholder art automatically when image assets are not available, so it can run without an assets folder.
