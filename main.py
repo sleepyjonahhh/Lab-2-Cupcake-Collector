@@ -220,13 +220,34 @@ async def game_loop():
 
             screen.blit(player_image, player_rect)
 
-            font = pygame.font.Font(None, 30)
-            score = font.render(
-                f"Cupcakes left: {len(cupcakes)}   Time: {max(0, int(time_left))}",
-                True,
-                WHITE,
+            font = pygame.font.SysFont("Arial", 30)
+            cupcakes_label = font.render("Cupcakes left:", True, WHITE)
+            cupcakes_value = font.render(str(len(cupcakes)), True, WHITE)
+            time_label = font.render("Time:", True, WHITE)
+            time_value = font.render(str(max(0, int(time_left))), True, WHITE)
+            hud_width = (
+                cupcakes_label.get_width()
+                + cupcakes_value.get_width()
+                + time_label.get_width()
+                + time_value.get_width()
+                + 54
             )
-            screen.blit(score, (15, 15))
+            hud_height = cupcakes_label.get_height() + 16
+            panel = pygame.Rect(12, 12, hud_width, hud_height)
+            panel_surface = pygame.Surface(panel.size, pygame.SRCALPHA)
+            pygame.draw.rect(
+                panel_surface, (111, 190, 201, 170), panel_surface.get_rect()
+            )
+            screen.blit(panel_surface, panel.topleft)
+            text_y = panel.y + 8
+            text_x = panel.x + 12
+            screen.blit(cupcakes_label, (text_x, text_y))
+            text_x += cupcakes_label.get_width() + 8
+            screen.blit(cupcakes_value, (text_x, text_y))
+            text_x += cupcakes_value.get_width() + 18
+            screen.blit(time_label, (text_x, text_y))
+            text_x += time_label.get_width() + 8
+            screen.blit(time_value, (text_x, text_y))
         else:
             panel = pygame.Rect(120, 150, WIDTH - 240, 260)
             pygame.draw.rect(screen, (72, 145, 145), panel, border_radius=16)
