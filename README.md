@@ -1,10 +1,10 @@
-# Lab 2: Cupcake Collector
+# Cupcake Collector
 
-Cupcake Collector is a simple Pygame platform game. Guide the chicken through three short courses, collect enough cupcakes before time runs out, and finish each course.
+Cupcake Collector is a simple Pygame platform game. Move the chicken across randomized short mint-colored platforms, use a double jump, and collect all ten cupcakes before the 60-second timer runs out.
 
 ## How to Play
 
-1. Install Python 3 and Pygame.
+1. Install Python 3 and the packages in `requirements.txt`.
 2. Open a terminal in this folder.
 3. Run:
 
@@ -12,23 +12,37 @@ Cupcake Collector is a simple Pygame platform game. Guide the chicken through th
 python main.py
 ```
 
-4. Press **Enter** on the title screen to start.
+4. The game starts immediately.
+
+## Run in a Browser
+
+The game uses an async game loop so it can be packaged for the browser with Pygbag.
+
+```bash
+python -m pip install -r requirements.txt
+python -m pygbag --build main.py
+```
+
+Open the local address shown by Pygbag. The generated browser files are placed in `build/web`.
 
 ## Controls
 
 - **A / D** or **Left / Right arrows**: Move
-- **Space**, **W**, or **Up arrow**: Jump
-- **Space**, **W**, or **Up arrow** in the air: Double jump
-- **Down arrow**: Drop through platforms
-- **P** or **Esc**: Pause or resume
-- **R**: Restart the current run
-- **Q** while paused: Return to the title screen
-- **Enter** or **Space** after a course: Continue or play again
+- **Space**, **W**, or **Up arrow**: Jump or double jump
+- **R**: Restart the game
+- **Space** on the win or lose screen: Play again
 
-## Scoring
+The top-left display shows how many cupcakes remain and how much time is left. Collect every cupcake to win. If the timer reaches zero, you lose. Both screens let you press Space to play again with a new randomized layout.
 
-- Regular cupcake: **+10 points**
-- Gold cupcake: **+30 points**
+The game uses the custom chicken and cupcake sprites in the `assets` folder. Add an image named `assets/background.png` to use a custom background; otherwise, the game creates a matching city-and-sky background automatically.
 
-Collect the target number of cupcakes shown for each course, then reach the end before the timer reaches zero.
+## Requirements
+
+- Python 3
+- Pygame Community Edition
+- Pygbag
+
+## GitHub Pages
+
+The repository includes a GitHub Actions workflow in `.github/workflows/pages.yml`. Push the project to GitHub, select **GitHub Actions** as the Pages source in repository settings, and the workflow will build and deploy the browser version.
 
