@@ -2,18 +2,6 @@
 
 Cupcake Collector is a simple Pygame platform game. Move the chicken across randomized short mint-colored platforms, use a double jump, and collect all ten cupcakes before the 60-second timer runs out.
 
-## How to Play
-
-1. Install Python 3 and the packages in `requirements.txt`.
-2. Open a terminal in this folder.
-3. Run:
-
-```bash
-python main.py
-```
-
-4. The game starts immediately.
-
 ## Run in a Browser
 
 The game uses an async game loop so it can be packaged for the browser with Pygbag.
@@ -35,12 +23,6 @@ Open the local address shown by Pygbag. The generated browser files are placed i
 The top-left display shows how many cupcakes remain and how much time is left. Collect every cupcake to win. If the timer reaches zero, you lose. Both screens let you press Space to play again with a new randomized layout.
 
 The game uses the custom chicken and cupcake sprites in the `assets` folder. Add an image named `assets/background.png` to use a custom background; otherwise, the game creates a matching city-and-sky background automatically.
-
-## Requirements
-
-- Python 3
-- Pygame Community Edition
-- Pygbag
 
 ## GitHub Pages
 
